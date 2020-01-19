@@ -2,30 +2,28 @@
 
 namespace App\Form;
 
-use App\Entity\UserInfo;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Form\UserInfoType;
 
-class UserInfoType extends AbstractType
+class User1Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName')
-            ->add('lastName')
-            ->add('dateOfBirth')
-            ->add('gender')
-            ->add('createdAt')
-            ->add('updatedAt')
-            ->add('profilePic')
+            ->add('email')
+            ->add('password')
+            ->add('status')
+            ->add('userInfo', UserInfoType::class)
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => UserInfo::class,
+            'data_class' => User::class,
         ]);
     }
 }
