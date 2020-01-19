@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -58,6 +60,16 @@ class Subject
      * @ORM\ManyToOne(targetEntity="App\Entity\Course", inversedBy="subjects")
      */
     private $class;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Attendance", mappedBy="subject")
+     */
+    private $attendances;
+
+    public function __construct()
+    {
+        $this->attendances = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -156,6 +168,37 @@ class Subject
     public function setClass(?Course $class): self
     {
         $this->class = $class;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Attendance[]
+     */
+    public function getAttendances(): Collection
+    {
+        return $this->attendances;
+    }
+
+    public function addAttendance(Attendance $attendance): self
+    {
+        if (!$this->attendances->contains($attendance)) {
+            $this->attendances[] = $attendance;
+            $attendance->setSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttendance(Attendance $attendance): self
+    {
+        if ($this->attendances->contains($attendance)) {
+            $this->attendances->removeElement($attendance);
+            // set the owning side to null (unless already changed)
+            if ($attendance->getSubject() === $this) {
+                $attendance->setSubject(null);
+            }
+        }
 
         return $this;
     }

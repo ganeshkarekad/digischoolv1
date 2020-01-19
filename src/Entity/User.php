@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -37,7 +39,7 @@ class User implements UserInterface
     private $password;
 
     /**
-    * @Gedmo\Timestampable(on="create")
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -61,6 +63,16 @@ class User implements UserInterface
      * @ORM\OneToOne(targetEntity="App\Entity\UserInfo", mappedBy="user", cascade={"persist", "remove"})
      */
     private $userInfo;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Attendance", mappedBy="user")
+     */
+    private $attendances;
+
+    public function __construct()
+    {
+        $this->attendances = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -201,6 +213,37 @@ class User implements UserInterface
         $newUser = null === $userInfo ? null : $this;
         if ($userInfo->getUser() !== $newUser) {
             $userInfo->setUser($newUser);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Attendance[]
+     */
+    public function getAttendances(): Collection
+    {
+        return $this->attendances;
+    }
+
+    public function addAttendance(Attendance $attendance): self
+    {
+        if (!$this->attendances->contains($attendance)) {
+            $this->attendances[] = $attendance;
+            $attendance->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttendance(Attendance $attendance): self
+    {
+        if ($this->attendances->contains($attendance)) {
+            $this->attendances->removeElement($attendance);
+            // set the owning side to null (unless already changed)
+            if ($attendance->getUser() === $this) {
+                $attendance->setUser(null);
+            }
         }
 
         return $this;

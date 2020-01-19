@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Attendance{% endblock %}
+
+{% block body %}
+    <h1>Attendance</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ attendance.id }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ attendance.date ? attendance.date|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ attendance.createdAt ? attendance.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ attendance.updatedAt ? attendance.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DeletedAt</th>
+                <td>{{ attendance.deletedAt ? attendance.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsPresent</th>
+                <td>{{ attendance.isPresent ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('attendance_index') }}">back to list</a>
+
+    <a href="{{ path('attendance_edit', {'id': attendance.id}) }}">edit</a>
+
+    {{ include('attendance/_delete_form.html.twig') }}
+{% endblock %}

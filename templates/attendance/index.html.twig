@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Attendance index{% endblock %}
+
+{% block body %}
+    <h1>Attendance index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>DeletedAt</th>
+                <th>IsPresent</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for attendance in attendances %}
+            <tr>
+                <td>{{ attendance.id }}</td>
+                <td>{{ attendance.date ? attendance.date|date('Y-m-d') : '' }}</td>
+                <td>{{ attendance.createdAt ? attendance.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ attendance.updatedAt ? attendance.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ attendance.deletedAt ? attendance.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ attendance.isPresent ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('attendance_show', {'id': attendance.id}) }}">show</a>
+                    <a href="{{ path('attendance_edit', {'id': attendance.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('attendance_new') }}">Create new</a>
+{% endblock %}
